@@ -11,6 +11,7 @@ import {
   MAT_SNACK_BAR_DEFAULT_OPTIONS,
   MatSnackBar,
 } from '@angular/material/snack-bar';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-sprint-form',
@@ -57,49 +58,6 @@ export class SprintFormComponent {
     return total + parseInt(story.storypoint, 10); // parseInt to convert string to number
   }, 0);
 
-  drop(event: CdkDragDrop<any[]>) {
-    if (this.sprinForm.valid) {
-      if (event.previousContainer === event.container) {
-        moveItemInArray(
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex
-        );
-      } else {
-        transferArrayItem(
-          event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex
-        );
-        const totalStoryPoints = this.activeSprint.reduce((total, story) => {
-          return total + parseInt(story.storypoint, 10);
-        }, 0);
-        if (this.sprinForm.value.maximumStorypoint < totalStoryPoints) {
-          transferArrayItem(
-            event.container.data,
-            event.previousContainer.data,
-            event.currentIndex,
-            event.previousIndex
-          );
-          this.totalSprintPoint = event.container.data.reduce(
-            (total, story) => {
-              return total + parseInt(story.storypoint, 10);
-            },
-            0
-          );
-          this.openSnackBar(
-            'The Total story points exeeds Sprint Points',
-            'close'
-          );
-        } else {
-          this.totalSprintPoint = totalStoryPoints;
-        }
-      }
-    } else {
-      this.sprinForm.markAllAsTouched();
-    }
-  }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
@@ -109,6 +67,11 @@ export class SprintFormComponent {
     if(this.sprintService.getMaximumStoryPoint()){
          this.sprinForm.get('maximumStorypoint')?.setValue(this.sprintService.getMaximumStoryPoint())
     }
+    this.sprinForm.get('maximumStorypoint')?.valueChanges.pipe(
+      debounceTime(300) 
+    ).subscribe(() => {
+      this.onAutoSelect();
+    });
    
   }
   ngAfterContentChecked(): void {
@@ -191,6 +154,49 @@ export class SprintFormComponent {
           'Sprint is already saturated and cannot be adjusted further',
           'close'
         );
+      }
+    } else {
+      this.sprinForm.markAllAsTouched();
+    }
+  }
+  drop(event: CdkDragDrop<any[]>) {
+    if (this.sprinForm.valid) {
+      if (event.previousContainer === event.container) {
+        moveItemInArray(
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
+      } else {
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
+        const totalStoryPoints = this.activeSprint.reduce((total, story) => {
+          return total + parseInt(story.storypoint, 10);
+        }, 0);
+        if (this.sprinForm.value.maximumStorypoint < totalStoryPoints) {
+          transferArrayItem(
+            event.container.data,
+            event.previousContainer.data,
+            event.currentIndex,
+            event.previousIndex
+          );
+          this.totalSprintPoint = event.container.data.reduce(
+            (total, story) => {
+              return total + parseInt(story.storypoint, 10);
+            },
+            0
+          );
+          this.openSnackBar(
+            'The Total story points exeeds Sprint Points',
+            'close'
+          );
+        } else {
+          this.totalSprintPoint = totalStoryPoints;
+        }
       }
     } else {
       this.sprinForm.markAllAsTouched();
