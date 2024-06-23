@@ -1,0 +1,16 @@
+<div style="display: flex; column-gap: 1rem;">  
+<div class="stories-container" >
+    <div class="story-card" *ngFor="let story of this.sprintService.getBacklogStories()">
+      <h3>{{ story.storyName }}</h3>
+      <p>Story Points: {{ story.storypoint }}</p>
+    </div>
+  </div>
+  <button mat-mini-fab color="primary" [matMenuTriggerFor]="menu" aria-label="Example icon button with a menu icon">
+    <mat-icon >menu</mat-icon>
+    <mat-menu #menu="matMenu">
+    <button *ngFor="let button of menuType" mat-menu-item [routerLink]="button.routerLink">{{ button.displayName }}</button>
+  </mat-menu>
+  
+  </button>
+</div>
+  

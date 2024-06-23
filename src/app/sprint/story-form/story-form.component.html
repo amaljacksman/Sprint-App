@@ -1,0 +1,60 @@
+<div style="display: flex; column-gap: 1rem;">  
+<form class="form" [formGroup]="storyForm">
+<div class="button-alignment" >
+  <button mat-raised-button routerLink="/sprint" >Back <mat-icon >arrow_back</mat-icon></button>
+  <button (click)="onSave()" [disabled]="!this.storyForm.valid" mat-raised-button color="primary">Save <mat-icon >save</mat-icon></button>
+</div>
+
+<mat-form-field  appearance="outline">
+    <mat-label>Story Name</mat-label>
+    <input
+      matInput
+      maxlength="50"
+      placeholder="Story Name"
+      formControlName="storyName"
+      autocomplete="off"
+      required
+    />
+    <mat-error
+      *ngIf="
+      storyForm.hasError('required', ['storyName'])
+      "
+    >
+    Story Name is required</mat-error
+    >
+    <mat-error *ngIf="hasServerError('storyName')">
+      {{ getServerError("storyName") }}</mat-error
+    >
+  </mat-form-field>
+  <mat-form-field  appearance="outline">
+    <mat-label>Story Point</mat-label>
+    <input  
+      matInput
+      maxlength="50"
+      placeholder="Story Point"
+      formControlName="storypoint"
+      autocomplete="off"
+      required
+      type="number"
+
+    />
+    <mat-error
+      *ngIf="
+      storyForm.hasError('required', ['storypoint'])
+      "
+    >
+    Story Point is required</mat-error
+    >
+    <mat-error *ngIf="hasServerError('storypoint')">
+      {{ getServerError("storypoint") }}</mat-error
+    >
+  </mat-form-field>
+  </form>
+  <button  style="margin-top: 1rem"  mat-mini-fab color="primary" [matMenuTriggerFor]="menu" aria-label="Example icon button with a menu icon">
+    <mat-icon >menu</mat-icon>
+    <mat-menu #menu="matMenu">
+
+        <button *ngFor="let button of menuType" mat-menu-item  (click)="button.click()">{{ button.displayName }}</button> 
+    </mat-menu>
+    </button>
+</div>

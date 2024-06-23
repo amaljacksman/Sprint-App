@@ -1,0 +1,11 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 700px;
+  margin: 1rem 0rem 0rem 1rem;
+}
+.button-alignment {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}

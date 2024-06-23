@@ -1,0 +1,77 @@
+<div style="display: flex; column-gap: 1rem;">  
+
+<div>
+    <form class="form" [formGroup]="sprinForm">
+        <div class="button-alignment" >
+          <button mat-raised-button routerLink="/sprint" >Back <mat-icon >arrow_back</mat-icon></button>
+          <button (click)="onSave()" [disabled]="!this.sprinForm.valid" mat-raised-button color="primary">Save <mat-icon >save</mat-icon></button>
+        </div>
+        
+    
+          <mat-form-field  appearance="outline">
+            <mat-label>Sprint Point</mat-label>
+            <input  
+              matInput
+              maxlength="50"
+              placeholder="Sprint Point"
+              formControlName="maximumStorypoint"
+              autocomplete="off"
+              required
+              type="number"
+        
+            />
+            <mat-error
+              *ngIf="
+              sprinForm.hasError('required', ['maximumStorypoint'])
+              "
+            >
+            Sprint Point is required</mat-error
+            >
+            <mat-error *ngIf="hasServerError('maximumStorypoint')">
+              {{ getServerError("maximumStorypoint") }}</mat-error
+            >
+          </mat-form-field>
+          </form>
+    <div class="stories-alignment" cdkDropListGroup>
+       
+        <div >
+          <h2>Back Log</h2>
+      
+          <div
+            cdkDropList
+            [cdkDropListData]="backLog"
+            class="stories-container "
+            (cdkDropListDropped)="drop($event)">
+            <div class="story-card" *ngFor="let story of backLog" cdkDrag>
+                <h3>{{ story.storyName }}</h3>
+                <p>Story Points: {{ story.storypoint }}</p>
+              </div>
+          </div>
+        </div>
+      
+        <div>
+          <h2>Active Sprint (Total Sprint Points {{this.totalSprintPoint}} ) </h2>
+      
+          <div
+            cdkDropList
+            [cdkDropListData]="activeSprint"
+            class="stories-container "
+            (cdkDropListDropped)="drop($event)">
+            <div class="story-card" *ngFor="let story of activeSprint" cdkDrag>
+                <h3>{{ story.storyName }}</h3>
+                <p>Story Points: {{ story.storypoint }}</p>
+              </div>
+          </div>
+        </div>
+      </div>
+      
+    
+</div>
+<button  style="margin-top: 1rem"  mat-mini-fab color="primary" [matMenuTriggerFor]="menu" aria-label="Example icon button with a menu icon">
+    <mat-icon >menu</mat-icon>
+    <mat-menu #menu="matMenu">
+
+        <button *ngFor="let button of menuType" mat-menu-item  (click)="button.click()">{{ button.displayName }}</button> 
+    </mat-menu>
+    </button>
+</div>

@@ -1,0 +1,13 @@
+<mat-tab-group animationDuration="0ms" #tab mat-stretch-tabs="false" mat-align-tabs="start">
+  
+    <mat-tab label="Back Log">
+      <ng-template matTabContent>
+<app-back-log></app-back-log>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Active Sprint">
+        <ng-template matTabContent>
+     <app-active-sprints></app-active-sprints>
+        </ng-template>
+      </mat-tab>
+  </mat-tab-group>
